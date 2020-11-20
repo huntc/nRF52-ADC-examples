@@ -117,7 +117,7 @@ static void lpcomp_init(void)
     uint32_t                err_code;
 
     nrfx_lpcomp_config_t config = NRFX_LPCOMP_DEFAULT_CONFIG;
-    config.input = NRF_LPCOMP_INPUT_7;
+    config.input = NRF_LPCOMP_INPUT_4;
     // initialize LPCOMP driver, from this point LPCOMP will be active and provided
     // event handler will be executed when defined action is detected
     err_code = nrfx_lpcomp_init(&config, lpcomp_event_handler);
