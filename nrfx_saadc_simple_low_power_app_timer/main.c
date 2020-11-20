@@ -78,7 +78,7 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
-#include "nrf_drv_lpcomp.h"
+#include "nrfx_lpcomp.h"
 
 #define SAADC_CHANNEL_COUNT   3
 #define SAADC_SAMPLE_INTERVAL_MS 250
@@ -116,13 +116,13 @@ static void lpcomp_init(void)
 {
     uint32_t                err_code;
 
-    nrf_drv_lpcomp_config_t config = NRF_DRV_LPCOMP_DEFAULT_CONFIG;
+    nrfx_lpcomp_config_t config = NRFX_LPCOMP_DEFAULT_CONFIG;
     config.input = NRF_LPCOMP_INPUT_7;
     // initialize LPCOMP driver, from this point LPCOMP will be active and provided
     // event handler will be executed when defined action is detected
-    err_code = nrf_drv_lpcomp_init(&config, lpcomp_event_handler);
+    err_code = nrfx_lpcomp_init(&config, lpcomp_event_handler);
     APP_ERROR_CHECK(err_code);
-    nrf_drv_lpcomp_enable();
+    nrfx_lpcomp_enable();
 }
 
 /**@brief Create timers.
