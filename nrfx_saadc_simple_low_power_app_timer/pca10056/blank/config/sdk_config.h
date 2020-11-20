@@ -143,7 +143,7 @@
 // <e> NRFX_PPI_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_PPI_CONFIG_LOG_ENABLED
-#define NRFX_PPI_CONFIG_LOG_ENABLED 0
+#define NRFX_PPI_CONFIG_LOG_ENABLED 1
 #endif
 // <o> NRFX_PPI_CONFIG_LOG_LEVEL  - Default Severity level
  
@@ -154,7 +154,7 @@
 // <4=> Debug 
 
 #ifndef NRFX_PPI_CONFIG_LOG_LEVEL
-#define NRFX_PPI_CONFIG_LOG_LEVEL 3
+#define NRFX_PPI_CONFIG_LOG_LEVEL 4
 #endif
 
 // <o> NRFX_PPI_CONFIG_INFO_COLOR  - ANSI escape code prefix.
@@ -309,7 +309,7 @@
  
 
 #ifndef NRFX_RTC2_ENABLED
-#define NRFX_RTC2_ENABLED 0
+#define NRFX_RTC2_ENABLED 1
 #endif
 
 // <o> NRFX_RTC_MAXIMUM_LATENCY_US - Maximum possible time[us] in highest priority interrupt 
@@ -1663,7 +1663,7 @@
 // <e> NRF_LOG_ENABLED - nrf_log - Logger
 //==========================================================
 #ifndef NRF_LOG_ENABLED
-#define NRF_LOG_ENABLED 0
+#define NRF_LOG_ENABLED 1
 #endif
 // <h> Log message pool - Configuration of log message pool
 
@@ -2169,6 +2169,216 @@
 
 // </e>
 
+//==========================================================
+// <e> LPCOMP_ENABLED - nrf_drv_lpcomp - LPCOMP peripheral driver - legacy layer
+//==========================================================
+#ifndef LPCOMP_ENABLED
+#define LPCOMP_ENABLED 1
+#endif
+// <o> LPCOMP_CONFIG_REFERENCE  - Reference voltage
+ 
+// <0=> Supply 1/8 
+// <1=> Supply 2/8 
+// <2=> Supply 3/8 
+// <3=> Supply 4/8 
+// <4=> Supply 5/8 
+// <5=> Supply 6/8 
+// <6=> Supply 7/8 
+// <8=> Supply 1/16 (nRF52) 
+// <9=> Supply 3/16 (nRF52) 
+// <10=> Supply 5/16 (nRF52) 
+// <11=> Supply 7/16 (nRF52) 
+// <12=> Supply 9/16 (nRF52) 
+// <13=> Supply 11/16 (nRF52) 
+// <14=> Supply 13/16 (nRF52) 
+// <15=> Supply 15/16 (nRF52) 
+// <7=> External Ref 0 
+// <65543=> External Ref 1 
+
+#ifndef LPCOMP_CONFIG_REFERENCE
+#define LPCOMP_CONFIG_REFERENCE 3
+#endif
+
+// <o> LPCOMP_CONFIG_DETECTION  - Detection
+ 
+// <0=> Crossing 
+// <1=> Up 
+// <2=> Down 
+
+#ifndef LPCOMP_CONFIG_DETECTION
+#define LPCOMP_CONFIG_DETECTION 2
+#endif
+
+// <o> LPCOMP_CONFIG_INPUT  - Analog input
+ 
+// <0=> 0 
+// <1=> 1 
+// <2=> 2 
+// <3=> 3 
+// <4=> 4 
+// <5=> 5 
+// <6=> 6 
+// <7=> 7 
+
+#ifndef LPCOMP_CONFIG_INPUT
+#define LPCOMP_CONFIG_INPUT 2
+#endif
+
+// <q> LPCOMP_CONFIG_HYST  - Hysteresis
+ 
+
+#ifndef LPCOMP_CONFIG_HYST
+#define LPCOMP_CONFIG_HYST 0
+#endif
+
+// <o> LPCOMP_CONFIG_IRQ_PRIORITY  - Interrupt priority
+ 
+
+// <i> Priorities 0,2 (nRF51) and 0,1,4,5 (nRF52) are reserved for SoftDevice
+// <0=> 0 (highest) 
+// <1=> 1 
+// <2=> 2 
+// <3=> 3 
+// <4=> 4 
+// <5=> 5 
+// <6=> 6 
+// <7=> 7 
+
+#ifndef LPCOMP_CONFIG_IRQ_PRIORITY
+#define LPCOMP_CONFIG_IRQ_PRIORITY 6
+#endif
+
+// </e>
+
+// <e> NRFX_LPCOMP_ENABLED - nrfx_lpcomp - LPCOMP peripheral driver
+//==========================================================
+#ifndef NRFX_LPCOMP_ENABLED
+#define NRFX_LPCOMP_ENABLED 1
+#endif
+// <o> NRFX_LPCOMP_CONFIG_REFERENCE  - Reference voltage
+ 
+// <0=> Supply 1/8 
+// <1=> Supply 2/8 
+// <2=> Supply 3/8 
+// <3=> Supply 4/8 
+// <4=> Supply 5/8 
+// <5=> Supply 6/8 
+// <6=> Supply 7/8 
+// <8=> Supply 1/16 (nRF52) 
+// <9=> Supply 3/16 (nRF52) 
+// <10=> Supply 5/16 (nRF52) 
+// <11=> Supply 7/16 (nRF52) 
+// <12=> Supply 9/16 (nRF52) 
+// <13=> Supply 11/16 (nRF52) 
+// <14=> Supply 13/16 (nRF52) 
+// <15=> Supply 15/16 (nRF52) 
+// <7=> External Ref 0 
+// <65543=> External Ref 1 
+
+#ifndef NRFX_LPCOMP_CONFIG_REFERENCE
+#define NRFX_LPCOMP_CONFIG_REFERENCE 3
+#endif
+
+// <o> NRFX_LPCOMP_CONFIG_DETECTION  - Detection
+ 
+// <0=> Crossing 
+// <1=> Up 
+// <2=> Down 
+
+#ifndef NRFX_LPCOMP_CONFIG_DETECTION
+#define NRFX_LPCOMP_CONFIG_DETECTION 2
+#endif
+
+// <o> NRFX_LPCOMP_CONFIG_INPUT  - Analog input
+ 
+// <0=> 0 
+// <1=> 1 
+// <2=> 2 
+// <3=> 3 
+// <4=> 4 
+// <5=> 5 
+// <6=> 6 
+// <7=> 7 
+
+#ifndef NRFX_LPCOMP_CONFIG_INPUT
+#define NRFX_LPCOMP_CONFIG_INPUT 0
+#endif
+
+// <q> NRFX_LPCOMP_CONFIG_HYST  - Hysteresis
+ 
+
+#ifndef NRFX_LPCOMP_CONFIG_HYST
+#define NRFX_LPCOMP_CONFIG_HYST 0
+#endif
+
+// <o> NRFX_LPCOMP_CONFIG_IRQ_PRIORITY  - Interrupt priority
+ 
+// <0=> 0 (highest) 
+// <1=> 1 
+// <2=> 2 
+// <3=> 3 
+// <4=> 4 
+// <5=> 5 
+// <6=> 6 
+// <7=> 7 
+
+#ifndef NRFX_LPCOMP_CONFIG_IRQ_PRIORITY
+#define NRFX_LPCOMP_CONFIG_IRQ_PRIORITY 6
+#endif
+
+// <e> NRFX_LPCOMP_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef NRFX_LPCOMP_CONFIG_LOG_ENABLED
+#define NRFX_LPCOMP_CONFIG_LOG_ENABLED 0
+#endif
+// <o> NRFX_LPCOMP_CONFIG_LOG_LEVEL  - Default Severity level
+ 
+// <0=> Off 
+// <1=> Error 
+// <2=> Warning 
+// <3=> Info 
+// <4=> Debug 
+
+#ifndef NRFX_LPCOMP_CONFIG_LOG_LEVEL
+#define NRFX_LPCOMP_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> NRFX_LPCOMP_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRFX_LPCOMP_CONFIG_INFO_COLOR
+#define NRFX_LPCOMP_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> NRFX_LPCOMP_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+ 
+// <0=> Default 
+// <1=> Black 
+// <2=> Red 
+// <3=> Green 
+// <4=> Yellow 
+// <5=> Blue 
+// <6=> Magenta 
+// <7=> Cyan 
+// <8=> White 
+
+#ifndef NRFX_LPCOMP_CONFIG_DEBUG_COLOR
+#define NRFX_LPCOMP_CONFIG_DEBUG_COLOR 0
+#endif
+
+// </e>
+
+// </e>
+
 // <e> LPCOMP_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef LPCOMP_CONFIG_LOG_ENABLED
@@ -2325,7 +2535,7 @@
 // <e> PPI_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef PPI_CONFIG_LOG_ENABLED
-#define PPI_CONFIG_LOG_ENABLED 0
+#define PPI_CONFIG_LOG_ENABLED 1
 #endif
 // <o> PPI_CONFIG_LOG_LEVEL  - Default Severity level
  
@@ -2336,7 +2546,7 @@
 // <4=> Debug 
 
 #ifndef PPI_CONFIG_LOG_LEVEL
-#define PPI_CONFIG_LOG_LEVEL 3
+#define PPI_CONFIG_LOG_LEVEL 4
 #endif
 
 // <o> PPI_CONFIG_INFO_COLOR  - ANSI escape code prefix.

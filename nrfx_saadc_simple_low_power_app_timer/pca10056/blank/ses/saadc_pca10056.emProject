@@ -60,7 +60,7 @@
       <file file_name="../../../../../../components/libraries/ringbuf/nrf_ringbuf.c" />
       <file file_name="../../../../../../components/libraries/experimental_section_vars/nrf_section_iter.c" />
       <file file_name="../../../../../../components/libraries/strerror/nrf_strerror.c" />
-	  <file file_name="../../../../../../components/libraries/timer/app_timer2.c" />
+      <file file_name="../../../../../../components/libraries/timer/app_timer2.c" />
       <file file_name="../../../../../../components/libraries/timer/drv_rtc.c" />
       <file file_name="../../../../../../components/libraries/atomic_fifo/nrf_atfifo.c" />
       <file file_name="../../../../../../components/libraries/sortlist/nrf_sortlist.c" />
@@ -74,6 +74,8 @@
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_clock.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_rtc.c" />
       <file file_name="../../../../../../integration/nrfx/legacy/nrf_drv_clock.c" />
+      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_ppi.c" />
+      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_lpcomp.c" />
     </folder>
     <folder Name="Application">
       <file file_name="../../../main.c" />
