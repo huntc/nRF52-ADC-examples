@@ -78,17 +78,24 @@
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
- 
-#define SAADC_CHANNEL_COUNT   1
+#include "nrfx_ppi.h"
+#include "nrfx_rtc.h"
+
+#define SAADC_CHANNEL_COUNT   3
 #define SAADC_SAMPLE_INTERVAL_MS 250
 
-static volatile bool is_ready = true;
-static nrf_saadc_value_t samples[SAADC_CHANNEL_COUNT];
-static nrfx_saadc_channel_t channels[SAADC_CHANNEL_COUNT] = {NRFX_SAADC_DEFAULT_CHANNEL_SE(NRF_SAADC_INPUT_AIN0, 0)};
+#define SAADC_SAMPLE_INTERVAL_TICKS \
+    NRFX_RTC_US_TO_TICKS(SAADC_SAMPLE_INTERVAL_MS * 1000, 32)
 
-APP_TIMER_DEF(m_sample_timer_id);     /**< Handler for repeated timer used to blink LED 1. */
+static nrf_saadc_value_t samples[SAADC_CHANNEL_COUNT];
+static nrfx_saadc_channel_t channels[SAADC_CHANNEL_COUNT] = {NRFX_SAADC_DEFAULT_CHANNEL_SE(NRF_SAADC_INPUT_AIN7, 0), NRFX_SAADC_DEFAULT_CHANNEL_SE(NRF_SAADC_INPUT_AIN6, 1), NRFX_SAADC_DEFAULT_CHANNEL_SE(NRF_SAADC_INPUT_AIN5, 2)};
+
+static const nrfx_rtc_t m_rtc = NRFX_RTC_INSTANCE(2);
+static uint32_t next_sample_ticks = SAADC_SAMPLE_INTERVAL_TICKS;
  
-static void event_handler(nrfx_saadc_evt_t const * p_event)
+static nrf_ppi_channel_t m_ppi_channel;
+
+static void saadc_event_handler(nrfx_saadc_evt_t const * p_event)
 {
     if (p_event->type == NRFX_SAADC_EVT_DONE)
     {
@@ -97,31 +104,10 @@ static void event_handler(nrfx_saadc_evt_t const * p_event)
             NRF_LOG_INFO("CH%d: %d", i, p_event->data.done.p_buffer[i]);
         }
 
-        is_ready = true;
-    }
-}
-
-/**@brief Timeout handler for the repeated timer.
- */
-static void sample_timer_handler(void * p_context)
-{
-    if(is_ready)
-    {
-        ret_code_t err_code;
-
-        err_code = nrfx_saadc_simple_mode_set((1<<0),
-                                              NRF_SAADC_RESOLUTION_12BIT,
-                                              NRF_SAADC_OVERSAMPLE_DISABLED,
-                                              event_handler);
+        NRF_LOG_INFO("Enqueing sampler");
+        next_sample_ticks += SAADC_SAMPLE_INTERVAL_TICKS;
+        ret_code_t err_code = nrfx_rtc_cc_set(&m_rtc, 0, next_sample_ticks, false);
         APP_ERROR_CHECK(err_code);
-        
-        err_code = nrfx_saadc_buffer_set(samples, SAADC_CHANNEL_COUNT);
-        APP_ERROR_CHECK(err_code);
-
-        err_code = nrfx_saadc_mode_trigger();
-        APP_ERROR_CHECK(err_code);
-
-        is_ready = false;
     }
 }
 
@@ -132,24 +118,38 @@ static void lfclk_config(void)
     nrf_drv_clock_lfclk_request(NULL);
 }
 
+static void on_rtc_evt(nrfx_rtc_int_type_t int_type)
+{
+}
+
 /**@brief Create timers.
  */
 static void timers_init()
 {
     lfclk_config();                                  //Configure low frequency 32kHz clock
 
-    app_timer_init();
+    app_timer_init();   // Not used, but here to show that our RTC2 usage can co-exist.
 
     ret_code_t err_code;
 
-    // Create timers
-    err_code = app_timer_create(&m_sample_timer_id,
-                                APP_TIMER_MODE_REPEATED,
-                                sample_timer_handler);
+    nrfx_rtc_config_t rtc_config = NRFX_RTC_DEFAULT_CONFIG;
+    err_code = nrfx_rtc_init(&m_rtc, &rtc_config, on_rtc_evt);
     APP_ERROR_CHECK(err_code);
 
-    err_code = app_timer_start(m_sample_timer_id, APP_TIMER_TICKS(SAADC_SAMPLE_INTERVAL_MS), NULL);
+    err_code = nrfx_rtc_cc_set(&m_rtc, 0, next_sample_ticks, false);
     APP_ERROR_CHECK(err_code);
+
+    err_code = nrfx_ppi_channel_alloc(&m_ppi_channel);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = nrfx_ppi_channel_assign(m_ppi_channel,
+                                       nrfx_rtc_event_address_get(&m_rtc, NRF_RTC_EVENT_COMPARE_0),
+                                       nrf_saadc_task_address_get(NRF_SAADC_TASK_SAMPLE));
+    APP_ERROR_CHECK(err_code);
+    err_code = nrfx_ppi_channel_enable(m_ppi_channel);
+    APP_ERROR_CHECK(err_code);
+
+    nrfx_rtc_enable(&m_rtc);
 }
  
 int main(void)
@@ -168,7 +168,19 @@ int main(void)
     err_code = nrfx_saadc_channels_config(channels, SAADC_CHANNEL_COUNT);
     APP_ERROR_CHECK(err_code);
 
+    err_code = nrfx_saadc_simple_mode_set((1<<0) | (1<<1) | (1<<2),
+                                          NRF_SAADC_RESOLUTION_8BIT,
+                                          NRF_SAADC_OVERSAMPLE_DISABLED,
+                                          saadc_event_handler);
+    APP_ERROR_CHECK(err_code);
+    
+    err_code = nrfx_saadc_buffer_set(samples, SAADC_CHANNEL_COUNT);
+    APP_ERROR_CHECK(err_code);
+
     timers_init();
+
+    err_code = nrfx_saadc_mode_trigger();
+    APP_ERROR_CHECK(err_code);
 
     while (1)
     {
